@@ -9,10 +9,9 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using WebMatrix.WebData;
-using System.Diagnostics;
-using simo2api.MetricsNamespace;
 using Prometheus;
-using Microsoft.AspNetCore.Http
+using simo2api.MetricsNamespace;
+using Microsoft.AspNetCore.Http;
 
 namespace simo2api.Areas.Masters.Controllers
 {
@@ -22,70 +21,118 @@ namespace simo2api.Areas.Masters.Controllers
     [ApiController]
     public class MastersController : Controller
     {
-        private string MeasureLatency(Func<HttpRequest,string> functioncall, HttpRequest request,Gauge latency)
+        private void AppCountExceptions(Action action)
         {
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-            string result = functioncall(request);
-            stopwatch.Stop();
-            latency.IncTo(stopwatch.ElapsedMilliseconds);
-            return result;
+            AppMetrics.AppExceptions.CountExceptions(action);
         }
-
         [HttpGet]
         public ContentResult Get_RefStatusAll()
         {
-            Func<HttpRequest,string> functionCall = delegate (HttpRequest Request) { return new MastersModel().GetDataRefStatus(Request); };
-            string dtDist = MeasureLatency(functionCall, this.Request, AppMetrics.GetRefStatusAllLatencyGauge);
+            string dtDist = "";
+            AppCountExceptions(() =>
+            {
+                using (AppMetrics.GetRefStatusAllLatencyGauge.NewTimer())
+                {
+                    dtDist = new MastersModel().GetDataRefStatus(this.Request);
+                }
+            });
+
+
             return Content(dtDist, "application/json");
         }
+
+
         [HttpGet]
         public ContentResult Get_DistributorAll()
         {
-            Func<HttpRequest, string> functionCall = delegate (HttpRequest Request) { return new MastersModel().GetDataDistributorAll(Request); };
-            string dtDist = MeasureLatency(functionCall, this.Request, AppMetrics.GetDistributorAllLatencyGauge);
+            string dtDist = "";
+            AppCountExceptions(() =>
+            {
+                using (AppMetrics.GetDistributorAllLatencyGauge.NewTimer())
+                {
+                    dtDist = new MastersModel().GetDataDistributorAll(this.Request);
+                }
+            });
+
             return Content(dtDist, "application/json");
         }
         [HttpGet]
         public ContentResult Get_CabangDistAll()
         {
-            Func<HttpRequest, string> functionCall = delegate (HttpRequest Request) { return new MastersModel().GetDataCabangDistAll(Request); };
-            string dtDist = MeasureLatency(functionCall, this.Request, AppMetrics.Get_CabangDistAllLatencyGauge);
+            string dtDist = "";
+            AppCountExceptions(() =>
+            {
+                using (AppMetrics.Get_CabangDistAllLatencyGauge.NewTimer())
+                {
+                    dtDist = new MastersModel().GetDataCabangDistAll(this.Request);
+                }
+            });
             return Content(dtDist, "application/json");
         }
         [HttpGet]
-        public ContentResult Get_CabangDistByDistId(string DistID,string ProvId)
+        public ContentResult Get_CabangDistByDistId(string DistID, string ProvId)
         {
-            Func<HttpRequest, string> functionCall = delegate (HttpRequest Request) { return new MastersModel().GetDataCabangDistByDistId(Request,DistID,ProvId); };
-            string dtDist = MeasureLatency(functionCall, this.Request, AppMetrics.Get_CabangDistByDistIdlatencygauge);
+            string dtDist = "";
+            AppCountExceptions(() =>
+            {
+                using (AppMetrics.Get_CabangDistByDistIdlatencygauge.NewTimer())
+                {
+                    dtDist = new MastersModel().GetDataCabangDistByDistId(this.Request, DistID, ProvId);
+                }
+            });
+
             return Content(dtDist, "application/json");
         }
         [HttpGet]
         public ContentResult Get_CabangDistByKdCabang(string KdCabang)
         {
-            Func<HttpRequest, string> functionCall = delegate (HttpRequest Request) { return new MastersModel().GetDataCabangDistByKdCabang(Request,KdCabang); };
-            string dtDist = MeasureLatency(functionCall, this.Request, AppMetrics.Get_CabangDistByKdCabanglatencygauge);
+            string dtDist = "";
+            AppCountExceptions(() =>
+            {
+                using (AppMetrics.Get_CabangDistByKdCabanglatencygauge.NewTimer())
+                {
+                    dtDist = new MastersModel().GetDataCabangDistByKdCabang(this.Request, KdCabang);
+                }
+            });
             return Content(dtDist, "application/json");
         }
         [HttpGet]
         public ContentResult Get_ProviderByID(string provID)
         {
-            Func<HttpRequest, string> functionCall = delegate (HttpRequest Request) { return new MastersModel().GetDataProviderByID(Request,provID); };
-            string dtDist = MeasureLatency(functionCall, this.Request, AppMetrics.Get_ProviderByIDlatencygauge);
+            string dtDist = "";
+            AppCountExceptions(() =>
+            {
+                using (AppMetrics.Get_ProviderAlllatencygauge.NewTimer())
+                {
+                    dtDist = new MastersModel().GetDataProviderByID(this.Request, provID);
+                }
+            });
             return Content(dtDist, "application/json");
         }
         [HttpGet]
         public ContentResult Get_RejectListAll()
         {
-            Func<HttpRequest, string> functionCall = delegate (HttpRequest Request) { return new MastersModel().GetRejectList(Request); };
-            string dtDist = MeasureLatency(functionCall, this.Request, AppMetrics.Get_RejectListAlllatencygauge);
+            string dtDist = "";
+            AppCountExceptions(() =>
+            {
+                using (AppMetrics.Get_RejectListAlllatencygauge.NewTimer())
+                {
+                    dtDist = new MastersModel().GetRejectList(this.Request);
+                }
+            });
             return Content(dtDist, "application/json");
         }
         [HttpPost]
         public ContentResult Get_ProviderAll(Provider prov)
         {
-            Func<HttpRequest, string> functionCall = delegate (HttpRequest Request) { return new MastersModel().GetDataProviderAll(Request,prov.Offset,prov.Limit); };
-            string dtDist = MeasureLatency(functionCall, this.Request, AppMetrics.Get_ProviderAlllatencygauge);
+            string dtDist = "";
+            AppCountExceptions(() =>
+            {
+                using (AppMetrics.Get_ProviderAlllatencygauge.NewTimer())
+                {
+                    dtDist = new MastersModel().GetDataProviderAll(this.Request, prov.Offset, prov.Limit);
+                }
+            });
             return Content(dtDist, "application/json");
         }
         //[HttpPost]

@@ -42,8 +42,8 @@ namespace simo2api.MetricsNamespace
             Metrics.CreateCounter("simo2api_UserService_Decrypt_total_errors", "total number of errors of Decrypt method");
         public static readonly Gauge AuthorizationLatencyGauge =
             Metrics.CreateGauge("simo2api_Authorization_latency_gauge", "authorization last latency");
-        public static readonly Gauge GetRefStatusAllLatencyGauge =
-            Metrics.CreateGauge("simo2api_Get_RefStatusAll_latency_gauge", "GetRefStatusAll last latency");
+        public static readonly Histogram GetRefStatusAllLatencyGauge =
+            Metrics.CreateHistogram("simo2api_Get_RefStatusAll_latency_gauge", "GetRefStatusAll last latency");
         public static readonly Gauge GetDistributorAllLatencyGauge =
             Metrics.CreateGauge("simo2api_Get_DistributorAll_latency_gauge", "GetDistributorAll last latency");
         public static readonly Gauge Get_CabangDistAllLatencyGauge =
@@ -60,6 +60,8 @@ namespace simo2api.MetricsNamespace
             Metrics.CreateGauge("simo2api_Get_ProviderAll_latency_gauge", "Get_ProviderAll last latency");
         public static readonly Counter Get_RefStatusAllErrorCounter =
             Metrics.CreateCounter("simo2api_Get_RefStatusAll_total_errors", "total number of errors of Get_RefStatusAll method");
+        public static readonly Counter AppExceptions =
+            Metrics.CreateCounter("simo2api_total_errors", "total number of errors");
 
 
 
@@ -83,7 +85,6 @@ namespace simo2api.MetricsNamespace
             ExecuteSPErrorCounter.IncTo(0);
             DecryptErrorCounter.IncTo(0);
             AuthorizationLatencyGauge.IncTo(0);
-            GetRefStatusAllLatencyGauge.IncTo(0);
         }
         
     }
